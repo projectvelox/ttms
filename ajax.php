@@ -133,4 +133,9 @@
 	if($_POST["action"]=="fuckingremoveme") {
 		$sql = mysqli_query($con,"UPDATE rules SET status='Old' WHERE id=".$_POST['id']);
 	}
+
+	if($_POST["action"]=="update-rules") {
+		$rule = $_POST['rule']; 
+		$sql = mysqli_query($con,"UPDATE rules SET rule='$rule' WHERE id=".$_POST['id']); 
+	}
 ?>

@@ -48,7 +48,7 @@
 	    </div>
 	  </div>
 	</nav>
-	
+
 	<div class="container" style="margin-top: 80px;">
 		<ol class="breadcrumb">
 	    	<li><a href="admin-dashboard.php">Dashboard</a></li>	
@@ -190,9 +190,9 @@
 	        <form class="form-horizontal">
 			  <div class="form-group">
 			  	<input type="hidden" id="ruleId">
-			    <label class="control-label col-sm-2" for="rule">Rule:</label>
+			    <label class="control-label col-sm-2" for="ruleEdit">Rule:</label>
 			    <div class="col-sm-10"> 
-			       <textarea class="form-control" rows="5" id="rule"></textarea>
+			       <textarea class="form-control" rows="5" id="ruleEdit"></textarea>
 			    </div>
 			  </div>
 			 </form>
@@ -211,23 +211,21 @@
 			var id = $(this).data('id');
 			var rule = $(this).data('rule');
 			$('#editRule').modal('show');
-			$(".modal-body #rule").val(rule);
+			$('#ruleEdit').attr("placeholder", rule);
 			$(".modal-body #ruleId").val(id);
 		});
 
 		$(document).on("click", ".updateThis", function() { 
-			var rule = document.getElementById('rule').value;
-			var id = "<?=$id?>";
-
+			var rule = document.getElementById('ruleEdit').value;
+			var id = document.getElementById('ruleId').value;
 			$.ajax({type:"POST",url:"ajax.php",
 				data: {
 					id:id,
 					rule:rule,
-					action:"tournament-rules"
+					action:"update-rules"
 				},
 			    }).then(function(data) {
-					$('#myModal').modal('hide');
-					location.reload();
+			    	location.reload();
 			    });
 		});
 
