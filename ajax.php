@@ -80,7 +80,6 @@
 
 	if($_POST["action"]=="get_belt") {
 		$player = $_POST['player'];
-		
 		$sql = "SELECT belt FROM player WHERE CONCAT(firstname, ' ', middlename, ' ' , lastname) = '$player'";
 		$result = mysqli_query($con,$sql);
 		$row=mysqli_fetch_assoc($result);

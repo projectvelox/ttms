@@ -48,8 +48,7 @@
 	    </div>
 	  </div>
 	</nav>
-
-	<!-- Under the Nav Bar | The Dashboard -->
+	
 	<div class="container" style="margin-top: 80px;">
 		<ol class="breadcrumb">
 	    	<li><a href="admin-dashboard.php">Dashboard</a></li>	
@@ -99,11 +98,8 @@
 			</div>
 		</div>
 
-		<!-- Modal -->
 		<div id="myModal" class="modal fade" role="dialog">
 		  <div class="modal-dialog">
-
-		    <!-- Modal content-->
 		    <div class="modal-content">
 		      <div class="modal-header">
 		        <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -126,15 +122,11 @@
 
 		  </div>
 		</div>
-		<!-- Forms for Creating the Rules -->
 		<footer class="text-center"><p>Copyright &copy Simpas Group 2017. All Rights Reserved </p></footer>
 	</div>
 
-	<!-- Modal -->
 	<div id="fail" class="modal fade" role="dialog">
 	  <div class="modal-dialog">
-
-	    <!-- Modal content-->
 	    <div class="modal-content">
 	      <div class="modal-header">
 	        <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -151,11 +143,8 @@
 	  </div>
 	</div>
 
-	<!-- Modal -->
 	<div id="year" class="modal fade" role="dialog">
 	  <div class="modal-dialog">
-
-	    <!-- Modal content-->
 	    <div class="modal-content">
 	      <div class="modal-header">
 	        <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -168,15 +157,11 @@
 	        <button type="button" class="btn btn-primary close-modal" data-dismiss="modal">Close</button>
 	      </div>
 	    </div>
-
 	  </div>
 	</div>
 
-	<!-- Modal -->
 	<div id="success" class="modal fade" role="dialog">
 	  <div class="modal-dialog">
-
-	    <!-- Modal content-->
 	    <div class="modal-content">
 	      <div class="modal-header">
 	        <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -194,33 +179,30 @@
 	</div>
   
 	<!-- Modal -->
-		<div id="editRule" class="modal fade" role="dialog">
-		  <div class="modal-dialog">
-
-		    <!-- Modal content-->
-		    <div class="modal-content">
-		      <div class="modal-header">
-		        <button type="button" class="close" data-dismiss="modal">&times;</button>
-		        <h4 class="modal-title"><span class="glyphicon glyphicon-plus"></span> New Rule</h4>
-		      </div>
-		      <div class="modal-body">
-		        <form class="form-horizontal">
-				  <div class="form-group">
-				  	<input type="hidden" id="ruleId">
-				    <label class="control-label col-sm-2" for="rule">Rule:</label>
-				    <div class="col-sm-10"> 
-				       <textarea class="form-control" rows="5" id="rule"></textarea>
-				    </div>
-				  </div>
-				 </form>
-		      </div>
-		      <div class="modal-footer">
-		        <button type="button" class="btn btn-primary save" data-dismiss="modal">Save</button>
-		      </div>
-		    </div>
-
-		  </div>
-		</div>
+	<div id="editRule" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        <h4 class="modal-title"><span class="glyphicon glyphicon-pencil"></span> Edit Rule</h4>
+	      </div>
+	      <div class="modal-body">
+	        <form class="form-horizontal">
+			  <div class="form-group">
+			  	<input type="hidden" id="ruleId">
+			    <label class="control-label col-sm-2" for="rule">Rule:</label>
+			    <div class="col-sm-10"> 
+			       <textarea class="form-control" rows="5" id="rule"></textarea>
+			    </div>
+			  </div>
+			 </form>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-primary updateThis" data-dismiss="modal">Save</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 
 	<script src="js/jquery-3.1.1.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
@@ -233,6 +215,21 @@
 			$(".modal-body #ruleId").val(id);
 		});
 
+		$(document).on("click", ".updateThis", function() { 
+			var rule = document.getElementById('rule').value;
+			var id = "<?=$id?>";
+
+			$.ajax({type:"POST",url:"ajax.php",
+				data: {
+					id:id,
+					rule:rule,
+					action:"tournament-rules"
+				},
+			    }).then(function(data) {
+					$('#myModal').modal('hide');
+					location.reload();
+			    });
+		});
 
 		$(document).on("click", ".save", function() { 
 			var rule = document.getElementById('rule').value;
