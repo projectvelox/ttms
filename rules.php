@@ -73,7 +73,7 @@
 						<?php
 							$i=0;
 							$con = mysqli_connect("localhost","ttms","ttms","ttms");	
-							$result = mysqli_query($con,"SELECT * FROM rules WHERE status='Current'");
+							$result = mysqli_query($con,"SELECT * FROM rules WHERE status='Current' AND tournament_id=0");
 								while($row = mysqli_fetch_array($result))
 								{
 									$i++;

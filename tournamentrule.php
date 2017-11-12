@@ -71,14 +71,16 @@
 							$i=0;
 							$id= $_REQUEST['id'];
 							$con = mysqli_connect("localhost","ttms","ttms","ttms");
-							$result = mysqli_query($con,"SELECT * FROM rules WHERE tournament_id='$id'");
+							$result = mysqli_query($con,"SELECT * FROM rules WHERE tournament_id='$id' AND status!='Old'");
 								while($row = mysqli_fetch_array($result))
 								{	
 									$i++;
 									echo "<tr>";
 									echo "<td>" . $i . "</td>";
 									echo "<td>".$row['rule']."</td>";
-									echo "<td><button class='btn'></button><td>";
+									echo "<td>";
+									echo "<button class='btn btn-xs btn-danger removeRule' data-id='".$row['id']."'><span class='glyphicon glyphicon-remove'><span></button>";
+									echo "<td>";
 									echo "</tr>";	
 								}
 								mysqli_close($con);
@@ -208,6 +210,19 @@
 					location.reload();
 			    });
 		});
+
+		$(document).on("click", ".removeRule", function() { 
+			var id = $(this).data('id');
+			$.ajax({type:"POST",url:"ajax.php",
+				data: {
+					id:id,
+					action:"fuckingremoveme"
+				},
+			    }).then(function(data) {
+			    	location.reload();
+			    });
+		});
+
 
 	</script>
 </body>
