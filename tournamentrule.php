@@ -80,6 +80,7 @@
 									echo "<td>".$row['rule']."</td>";
 									echo "<td>";
 									echo "<button class='btn btn-xs btn-danger removeRule' data-id='".$row['id']."'><span class='glyphicon glyphicon-remove'><span></button>";
+									echo "<button class='btn btn-xs btn-primary editRule' id='editRule-".$row['id']."' data-id='".$row['id']."' data-rule='".$row['rule']."' style='margin-left: 5px;'><span class='glyphicon glyphicon-pencil'><span></button>";
 									echo "<td>";
 									echo "</tr>";	
 								}
@@ -195,6 +196,15 @@
 	<script src="js/jquery-3.1.1.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<script type="text/javascript">
+		$(document).on("click", ".editRule", function() {
+			var id = $(this).data('id');
+			var rule = $(this).data('rule');
+			var converted = '<div class="input-group add-on"><input class="form-control" id="save-rule'+id+'" placeholder="'+rule+'" type="text"><div class="input-group-btn"><button class="btn btn-success saveRule" data-buttonid="'+id+'" id="save-rule-'+id+'"><i class="glyphicon glyphicon-ok"></i></button></div><div class="input-group-btn"><button class="btn btn-danger cancelRule" data-buttonid="'+id+'" data-cancelrule="'+rule+'" id="cancel-rule-'+id+'"><i class="glyphicon glyphicon-remove"></i></button></div></div>';
+
+			$('.removeRule').hide();
+			$('#editRule-'+id).replaceWith('<td id="save-rule-'+id+'">'+converted+'</td>');
+		});
+
 		$(document).on("click", ".save", function() { 
 			var rule = document.getElementById('rule').value;
 			var id = "<?=$id?>";

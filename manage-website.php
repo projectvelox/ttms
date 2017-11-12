@@ -70,7 +70,7 @@
 							<?php
 								$i=0;
 								$con = mysqli_connect("localhost","ttms","ttms","ttms");	
-								$result = mysqli_query($con,"SELECT * FROM rules WHERE status='current'");
+								$result = mysqli_query($con,"SELECT * FROM rules WHERE status='current' AND tournament_id=0");
 									while($row = mysqli_fetch_array($result))
 									{
 										$i++;
@@ -79,7 +79,7 @@
 										echo "<td>" . $row['rule'] . "</td>";
 										if($row['status'] == 'Current')
 										{
-											echo "<td><button class='btn btn-danger btn-sm remove' data-id='".$row['id']."'>Remove</button></td>";
+											echo "<td><button class='btn btn-danger btn-xs remove' data-id='".$row['id']."'>Remove</button></td>";
 										}
 										echo "</tr>";
 									}
