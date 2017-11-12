@@ -54,11 +54,11 @@
 		</div>
 
 		<?php
-	  		$i=0;
 	  		$month=$_GET['month'];
 			$con = mysqli_connect("localhost","ttms","ttms","ttms");
 			$tournament = mysqli_query($con, "SELECT name FROM tournament WHERE CONCAT(MONTHNAME(end_date), ' ', YEAR(end_date))='$month' GROUP BY name");
 			foreach ($tournament as $rows) {
+				$i=0;
 				echo "<h3 class='text-center'>".$rows['name']."</h3>";
 				$tournamentName = $rows['name'];
 				$sql = mysqli_query($con, "SELECT 

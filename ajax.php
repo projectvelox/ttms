@@ -5,7 +5,7 @@
 		$rule = $_POST['rule'];
 		if($rule == '') { echo "1"; }
 		else {	
-			$sql = "INSERT INTO rules(rule) values('$rule')";
+			$sql = "INSERT INTO rules(rule, tournament_id) values('$rule', 0)";
 			$result = mysqli_query($con,$sql);
 		}
 	}

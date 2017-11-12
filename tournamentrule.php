@@ -80,7 +80,7 @@
 									echo "<td>".$row['rule']."</td>";
 									echo "<td>";
 									echo "<button class='btn btn-xs btn-danger removeRule' data-id='".$row['id']."'><span class='glyphicon glyphicon-remove'><span></button>";
-									echo "<button class='btn btn-xs btn-primary editRule' id='editRule-".$row['id']."' data-id='".$row['id']."' data-rule='".$row['rule']."' style='margin-left: 5px;'><span class='glyphicon glyphicon-pencil'><span></button>";
+									echo "<button class='btn btn-xs btn-primary editRule' data-id='".$row['id']."' data-rule='".$row['rule']."' style='margin-left: 5px;'><span class='glyphicon glyphicon-pencil'><span></button>";
 									echo "<td>";
 									echo "</tr>";	
 								}
@@ -192,6 +192,35 @@
 
 	  </div>
 	</div>
+  
+	<!-- Modal -->
+		<div id="editRule" class="modal fade" role="dialog">
+		  <div class="modal-dialog">
+
+		    <!-- Modal content-->
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal">&times;</button>
+		        <h4 class="modal-title"><span class="glyphicon glyphicon-plus"></span> New Rule</h4>
+		      </div>
+		      <div class="modal-body">
+		        <form class="form-horizontal">
+				  <div class="form-group">
+				  	<input type="hidden" id="ruleId">
+				    <label class="control-label col-sm-2" for="rule">Rule:</label>
+				    <div class="col-sm-10"> 
+				       <textarea class="form-control" rows="5" id="rule"></textarea>
+				    </div>
+				  </div>
+				 </form>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-primary save" data-dismiss="modal">Save</button>
+		      </div>
+		    </div>
+
+		  </div>
+		</div>
 
 	<script src="js/jquery-3.1.1.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
@@ -199,18 +228,11 @@
 		$(document).on("click", ".editRule", function() {
 			var id = $(this).data('id');
 			var rule = $(this).data('rule');
-			var converted = '<div class="input-group add-on" id="edit-rule-'+id+'" ><input class="form-control" placeholder="'+rule+'" type="text"><div class="input-group-btn"><button class="btn btn-success saveRule" data-buttonid="'+id+'" id="save-rule-'+id+'"><i class="glyphicon glyphicon-ok"></i></button></div><div class="input-group-btn"><button class="btn btn-danger cancelRule" data-cancelid="'+id+'" data-cancelrule="'+rule+'" id="cancel-rule-'+id+'"><i class="glyphicon glyphicon-remove"></i></button></div></div>';
-
-			$('.removeRule').hide();
-			$('#editRule-'+id).replaceWith('<td id="save-rule-'+id+'">'+converted+'</td>');
+			$('#editRule').modal('show');
+			$(".modal-body #rule").val(rule);
+			$(".modal-body #ruleId").val(id);
 		});
 
-		$(document).on("click", ".cancelRule", function() {
-			var id = $(this).data('cancelid');
-			var rule = $(this).data('cancelrule'); 
-			$('.removeRule').show();
-			$('#edit-rule-'+id).replaceWith('<td class="changeOnclick" id="changeOnclick-'+id+'" data-id="'+id+'"  data-rule="'+rule+'"><button class="btn btn-xs btn-primary editRule" id="editRule-'+id+'" data-id="'+id+'" data-rule="'+rule+'" style="margin-left: 5px;"><span class="glyphicon glyphicon-pencil"><span></button></td>');
-		});
 
 		$(document).on("click", ".save", function() { 
 			var rule = document.getElementById('rule').value;

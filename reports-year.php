@@ -54,7 +54,7 @@
 
 
 	  	<?php
-	  		$i=0;
+	  		
 	  		$year=$_GET['year'];
 			$con = mysqli_connect("localhost","ttms","ttms","ttms");
 			$tournament = mysqli_query($con, "SELECT tournament FROM tournament_registration GROUP BY tournament");
@@ -83,6 +83,7 @@
 				  		<th>Coach</th>
 				  	</tr>
 				';
+				$i=0;
 				foreach ($sql as $row) {
 					$i++;
 					echo "<tr>";
