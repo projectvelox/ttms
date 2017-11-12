@@ -199,10 +199,17 @@
 		$(document).on("click", ".editRule", function() {
 			var id = $(this).data('id');
 			var rule = $(this).data('rule');
-			var converted = '<div class="input-group add-on"><input class="form-control" id="save-rule'+id+'" placeholder="'+rule+'" type="text"><div class="input-group-btn"><button class="btn btn-success saveRule" data-buttonid="'+id+'" id="save-rule-'+id+'"><i class="glyphicon glyphicon-ok"></i></button></div><div class="input-group-btn"><button class="btn btn-danger cancelRule" data-buttonid="'+id+'" data-cancelrule="'+rule+'" id="cancel-rule-'+id+'"><i class="glyphicon glyphicon-remove"></i></button></div></div>';
+			var converted = '<div class="input-group add-on" id="edit-rule-'+id+'" ><input class="form-control" placeholder="'+rule+'" type="text"><div class="input-group-btn"><button class="btn btn-success saveRule" data-buttonid="'+id+'" id="save-rule-'+id+'"><i class="glyphicon glyphicon-ok"></i></button></div><div class="input-group-btn"><button class="btn btn-danger cancelRule" data-cancelid="'+id+'" data-cancelrule="'+rule+'" id="cancel-rule-'+id+'"><i class="glyphicon glyphicon-remove"></i></button></div></div>';
 
 			$('.removeRule').hide();
 			$('#editRule-'+id).replaceWith('<td id="save-rule-'+id+'">'+converted+'</td>');
+		});
+
+		$(document).on("click", ".cancelRule", function() {
+			var id = $(this).data('cancelid');
+			var rule = $(this).data('cancelrule'); 
+			$('.removeRule').show();
+			$('#edit-rule-'+id).replaceWith('<td class="changeOnclick" id="changeOnclick-'+id+'" data-id="'+id+'"  data-rule="'+rule+'"><button class="btn btn-xs btn-primary editRule" id="editRule-'+id+'" data-id="'+id+'" data-rule="'+rule+'" style="margin-left: 5px;"><span class="glyphicon glyphicon-pencil"><span></button></td>');
 		});
 
 		$(document).on("click", ".save", function() { 
