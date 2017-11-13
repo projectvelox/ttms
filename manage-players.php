@@ -82,11 +82,17 @@
 						      <input type="text" class="form-control" id="middlename" placeholder="Enter Middle Name">
 						    </div>
 						  </div>
+						  <div class="form-group">
+						    <label class="control-label col-sm-4" for="dateofbirth">Date Of Birth:</label>
+						    <div class="col-sm-8"> 
+						      <input type="date" class="form-control" id="dateofbirth" placeholder="Enter Date Of Birth">
+						    </div>
+						  </div>
 
 						  <div class="form-group">
 						    <label class="control-label col-sm-4" for="age">Age:</label>
 						    <div class="col-sm-8"> 
-						      <input type="number" class="form-control" id="age" placeholder="Enter Age">
+						      <input type="number" class="form-control" id="age" disabled>
 						    </div>
 						  </div>
 
@@ -101,12 +107,7 @@
 							  </div>
 						  </div>
 
-						  <div class="form-group">
-						    <label class="control-label col-sm-4" for="dateofbirth">Date Of Birth:</label>
-						    <div class="col-sm-8"> 
-						      <input type="date" class="form-control" id="dateofbirth" placeholder="Enter Date Of Birth">
-						    </div>
-						  </div>
+						  
 
 						  <div class="form-group">
 						    <label class="control-label col-sm-4" for="coach">Coach:</label>
@@ -443,6 +444,12 @@
 	<script src="js/jquery-3.1.1.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<script type="text/javascript">
+		function calculate_age(dob) { 
+		    var diff_ms = Date.now() - dob.getTime();
+		    var age_dt = new Date(diff_ms); 
+		    return Math.abs(age_dt.getUTCFullYear() - 1970);
+		}
+
 		function uploadFile(){
 		  var input = document.getElementById("file");
 		  file = input.files[0];
@@ -473,6 +480,15 @@
 			$(".elementary").hide();
 			$(".highschool").hide();
 			$(".college").hide();
+
+			$('#dateofbirth').change(function(){ 
+				var dob = document.getElementById('dateofbirth').value;
+				var split=dob.split(/\s*\-\s*/g);
+				var calculated = calculate_age(new Date(split[0], split[1], split[2]));
+				console.log(calculated);
+				$("#age").val(calculated);
+			});
+
 
 			$('#firsttimer').change(function(){ 
 				var firsttimer = document.getElementById('firsttimer').value;
@@ -587,6 +603,7 @@
 			if(degree == 'College') {
 				var category = document.getElementById('college').value;
 			}
+
 			$.ajax({type:"POST",url:"ajax.php",
 				data: {
 					lastname:lastname,
