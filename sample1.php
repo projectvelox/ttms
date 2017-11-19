@@ -59,7 +59,7 @@ if(mysqli_num_rows($query) > 0){
 					<div class="form-group has-feedback">
 						<label class="col-sm-2 control-label">School Level:</label>
 						<div class="col-sm-10">
-							<select name="school_level" required class="form-control">
+							<select name="school_level" id="school_level" required class="form-control">
 								<option value="" disabled selected>Select a school level</option>
 								<option value="Elementary"<?= (@$_POST['school_level'] == 'Elementary' ? ' selected' : '') ?>>Elementary</option>
 								<option value="High School"<?= (@$_POST['school_level'] == 'High School' ? ' selected' : '') ?>>High School</option>
@@ -70,7 +70,7 @@ if(mysqli_num_rows($query) > 0){
 					<div class="form-group has-feedback">
 						<label class="col-sm-2 control-label">Gender</label>
 						<div class="col-sm-10">
-							<select name="sex" required class="form-control">
+							<select name="sex" id="sex" required class="form-control">
 								<option value="" disabled selected>Select a gender</option>
 								<option value="Male"<?= (@$_POST['sex'] == 'Male' ? ' selected' : '') ?>>Male</option>
 								<option value="Female"<?= (@$_POST['sex'] == 'Female' ? ' selected' : '') ?>>Female</option></span>
@@ -80,7 +80,7 @@ if(mysqli_num_rows($query) > 0){
 					<div class="form-group has-feedback">
 						<label class="col-sm-2 control-label">Skill Level</label>
 						<div class="col-sm-10">
-							<select name="a_o" required class="form-control"> 
+							<select name="a_o" id="a_o" required class="form-control"> 
 								<option value="" disabled selected>Select an option down below</option>
 								<option value="advance"<?= (@$_POST['a_o'] == 'advance' ? ' selected' : '') ?>>Advance</option>
 								<option value="novice"<?= (@$_POST['a_o'] == 'novice' ? ' selected' : '') ?>>Novice</option></span>
@@ -90,7 +90,7 @@ if(mysqli_num_rows($query) > 0){
 					<div class="form-group has-feedback">
 						<label class="col-sm-2 control-label">Category</label>
 						<div class="col-sm-10">
-							<select name="category" required class="form-control">
+							<select name="category" id="category" required class="form-control">
 							    <option selected disabled>Select a category</option>
 							    <option value="Fin Weight"<?= (@$_POST['category'] == 'Fin Weight' ? ' selected' : '') ?>>Fin Weight</option>
 								<option value="Fly Weight"<?= (@$_POST['category'] == 'Fly Weight' ? ' selected' : '') ?>>Fly Weight</option>
@@ -148,7 +148,7 @@ if(isset($_POST['tid'])){
 			}
 			else {
 				while($row = mysqli_fetch_assoc($query)){
-					$teamName = $row['name'].' <strong>';
+					$teamName = $row['name'];
 					$teams_array[] = $teamName;
 
 					if(empty($team_match_array_db)){
@@ -165,12 +165,13 @@ if(isset($_POST['tid'])){
 			}
 			// Get results if found
 			$q = mysqli_query($con, 'SELECT * FROM `match_results` 
-					WHERE `tournament_id` = ' . $tournament->id );
+					WHERE `tournament_id` = ' . $tournament->id." AND advanceornovice = '$a_o' AND school_level = '$school_level' AND sex = '$sex' AND category = '$category'");
 			if(mysqli_num_rows($q) > 0){
 				$result = mysqli_fetch_object($q);
 				$jsonRes = json_decode($result->result_data);
 				$score_per_round = $jsonRes->results;
 				$team_match_array_db = $jsonRes->teams;
+				$has_result_data = true;
 			}
 			
 		}
@@ -189,107 +190,35 @@ if(!isset($last_team_slot[1]))
 	$team_match_array_db[count($team_match_array_db)-1][1] = null;
 
 
-// Create an array that stores all matches, every array should contain two teams in a single match
-/*
-$team_match_array = array(
-	array(
-		'Team 1','Team 2'  // Match 1
-	),
-	array(
-		'Team 3','Team 4' // Match 2
-	),
-	array(
-		'Team 5','Team 6' // Match 3
-	),
-	array(
-		'Team 7','Team 8' // Match 4
-	),
-	array(
-		'Team 9', 'Team 10'
-	),
-	array(
-		'Team 11', 'Team 12'
-	)
-);
-*/
-
-
-
 $match_remaining = count($team_match_array_db);
 $match_bracket = $team_match_array_db;
 
 
-$round = 0;
-/*
-while($match_remaining >= 1){
-	if(!empty($match_bracket)){
-		$match_bracket_loop = $match_bracket;
-		$match_bracket = array();
 
-		foreach($match_bracket_loop as $match){
-			$t1_score = 0;
-			$t2_score = 0;
-
-			while($t1_score === $t2_score){
-				$t1_score = rand(60,100);
-				$t2_score = rand(30,100);
-			}
-
-			
-			if($t1_score != $t2_score){
-				$winner = '';
-
-				// If team 1 wins
-				if(count($match) == 2){
-					if($t1_score > $t2_score){
-						$winner = $match[0].' ('.$t1_score.':'.$t2_score.')';
-					}
-					else{
-						if(isset($match[1]))
-							$winner = $match[1].' ('.$t1_score.':'.$t2_score.')';
-						else{
-							exit('ooops');
-						}
-					}
-				}
-
-				// Store scores on array
-				$score_per_round[$round][] = array($t1_score, $t2_score);
-				
-				// If winner array is empty add first row
-				if(count($match_bracket_loop) > 1){
-					if(empty($match_bracket)){
-						$match_bracket[] = array($winner); // Team 1 wins
-					}else{
-						$check = $match_bracket[count($match_bracket)-1];
-						if(count($check) == 2){
-							$match_bracket[] = array($winner);
-						}else
-							$match_bracket[count($match_bracket)-1][] = $winner;
-					}
-				}else{
-					// Shows the winner here
-					
-				}
-				
-				
-			}else{
-				echo 'Error : Same score generated';	
-			}
-		}
-
-		$match_remaining = count($match_bracket);
-		$round++;
-	}
-}
-*/
-?>
-
-
-<?php 
-if(isset($_POST['tid'])){
-?>
+if(isset($_POST['tid'])){?>
 <div id="match-canvas"></div>
+
+
+<button type="button" class="btn btn-danger" id="btnResetMatch"<?= (isset($has_result_data) ? ' style="display:block;"' : 'style="display:none;"') ?>><span class="glyphicon glyphicon-refresh"></span> Reset Match</button>
+	<script type="text/javascript">
+	$(function(){
+		$("#btnResetMatch").on('click', function(){
+			var conf = confirm('Are you sure you want to reset this match?');
+			if(conf){
+				$.post('sample-ajax-save.php', { action : 'clearMatch', tid : $("#tid").val(), 
+				school_level  : $("#school_level").val(), sex : $("#sex").val(), a_o : $("#a_o").val(), 
+				category : $("#category").val()
+				}, 
+				function(response){
+					if(response.status > 0)
+						$('form').submit();
+				}, 'json');	
+			}
+		});
+	});
+</script>
+
+
 <script type="text/javascript">
 $(document).ready(function(){
 
@@ -346,10 +275,14 @@ $(document).ready(function(){
 	function saveFn(data) {
 	  if($("#tid").val() > 0){
 		$.post('sample-ajax-save.php', { action : 'saveMatch', tid : $("#tid").val(), 
+			school_level  : $("#school_level").val(), sex : $("#sex").val(), a_o : $("#a_o").val(), 
+			category : $("#category").val(),
 			data : JSON.stringify(data) }, 
 			function(response){
-				if(response.status > 0)
+				if(response.status > 0){
+					$("#btnResetMatch").show();
 					console.log(response.message);
+				}
 		}, 'json');
 	  }
 	}
