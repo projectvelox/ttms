@@ -230,15 +230,14 @@
 					action:"register_coach"
 				},
 			    }).then(function(data) {
-			    	alert(data);
 			    	if (data == "1"){
 						$('#fail').modal({
-				        show: 'true'
+				        	show: 'true'
 					    });
 			    	}
 			    	else {
 			    		$('#success').modal({
-				        show: 'true'
+				        	show: 'true'
 					    }); 
 			    	} 
 			    });

@@ -19,7 +19,7 @@
 		$venue = $_POST['venue'];
 
 		$counterCheck = mysqli_query($con, "SELECT * FROM tournament WHERE name='$tournament'");
-		if(mysqli_num_rows($counterCheck) == 1) { echo "1";} 
+		if(mysqli_num_rows($counterCheck) == 1) { echo "Tournament Exist";} 
 		else {
 			if($tournament == '' ||  $start == '' || $end == '' || $venue == '') { echo "1"; }
 			if($start <= date("Y-m-d") || $end <= date("Y-m-d") || $end < $start) { echo "2"; }

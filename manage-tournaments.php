@@ -246,6 +246,27 @@
 	  </div>
 	</div>
 
+	<!-- Modal -->
+	<div id="sameName" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+
+	    <!-- Modal content-->
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        <h4 class="modal-title">Unsuccessful</h4>
+	      </div>
+	      <div class="modal-body">
+	        <p>The tournament you've created or trying to create exists already in the database. Please try again!</p>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-primary modal-closer" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+
+	  </div>
+	</div>
+
 	<script src="js/jquery-3.1.1.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<script type="text/javascript">
@@ -291,32 +312,33 @@
 					action:"add_tournament"
 				},
 			    }).then(function(data) {
-			    	if(data == '1'){
-			    		$('#myModal').modal('hide');
-			    		$('#fail').modal('show');
+			    	if(data=="Tournament Exist") { 
+			    		$('#myModal').modal('hide'); 
+			    		$('#sameName').modal('show');  
 			    	}
-			    	else if(data == '2'){
-		    			$('#myModal').modal('hide');
-		    			$('#year').modal('show');
-		    		}
 			    	else {
-			    		uploadFile();
-			    		$('#myModal').modal('hide');
-			    		$('#success').modal('show');
+			    		alert(data);
+			    		if(data == '1'){
+				    		$('#myModal').modal('hide');
+				    		$('#fail').modal('show');
+				    	}
+				    	if(data == '2'){
+			    			$('#myModal').modal('hide');
+			    			$('#year').modal('show');
+			    		}
+				    	else {
+				    		uploadFile();
+				    		$('#myModal').modal('hide');
+				    		$('#success').modal('show');
+				    	} 
 			    	}
+			    	
 			    });
 		});
 
-		$(document).on("click", ".close-modal", function() { 
-			$('#myModal').modal('show');
-    		$('#fail').modal('hide');
-		});
-
-		$(document).on("click", ".modal-closer", function() { 
-			$('#success').modal({ show: 'false' }); 
-			location.reload();
-		});
-
+		$("#sameName").on('hidden.bs.modal', function () { $('#myModal').modal('show'); });
+		$("#year").on('hidden.bs.modal', function () { $('#myModal').modal('show'); });
+		$("#fail").on('hidden.bs.modal', function () { $('#myModal').modal('show'); });
 	</script>
 </body>
 </html>	
