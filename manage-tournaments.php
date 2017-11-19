@@ -64,11 +64,12 @@
 						<table class="table table-hover">
 							<tr>
 								<th>#</th>
-								<th>Tournament Name</th>
-								<th>Start Date</th>
-								<th>End Date</th>
+								<th>Tournament</th>
+								<th>Start</th>
+								<th>End</th>
 								<th>Venue</th>
-								<th>Add Rules</th>
+								<th>Rules</th>
+								<th>Payments</th>
 							</tr>
 							<?php
 								$i=0;
@@ -79,11 +80,12 @@
 										$i++;
 										echo "<tr>";
 										echo "<td>" . $i . ".</td>";
-										echo "<td><a href='manage_payments.php?name=".urlencode($row['name'])."' style='color: #23527c; font-weight: bold;' target='_blank'>" . $row['name'] . "</a></td>";
+										echo "<td>" . $row['name'] . "</td>";
 										echo "<td>" . date('F d, Y', strtotime($row['start_date']))  . "</td>";
 										echo "<td>" . date('F d, Y', strtotime($row['end_date'])). "</td>";
 										echo "<td>" . $row['venue'] . "</td>";
-										echo "<td><a href='tournamentrule.php?id=".$row['id']."' class='btn btn-xs btn-primary'>Manage Rule</button></td>";
+										echo "<td><a href='tournamentrule.php?id=".$row['id']."' class='btn btn-xs btn-primary'>Manage</button></td>";
+										echo "<td><a href='manage_payments.php?name=".urlencode($row['name'])."' class='btn btn-xs btn-primary'>Manage</button></td>";
 										echo "</tr>";
 									}
 									mysqli_close($con);
