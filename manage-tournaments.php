@@ -295,7 +295,7 @@
 			    		$('#myModal').modal('hide');
 			    		$('#fail').modal('show');
 			    	}
-			    	if(data == '2'){
+			    	else if(data == '2'){
 		    			$('#myModal').modal('hide');
 		    			$('#year').modal('show');
 		    		}

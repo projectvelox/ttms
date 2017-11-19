@@ -16,12 +16,17 @@
 		$tournament = $_POST['tournament'];
 		$start = $_POST['start'];
 		$end = $_POST['end'];
-		$venue = $_POST['venue'];		
-		if($tournament == '' ||  $start == '' || $end == '' || $venue == '') { echo "1"; }
-		if($start <= date("Y-m-d") || $end <= date("Y-m-d") || $end < $start) { echo "2"; }
+		$venue = $_POST['venue'];
+
+		$counterCheck = mysqli_query($con, "SELECT * FROM tournament WHERE name='$tournament'");
+		if(mysqli_num_rows($counterCheck) == 1) { echo "1";} 
 		else {
-			$sql = "INSERT INTO tournament(name, start_date, end_date, venue) VALUES ('$tournament', '$start', '$end', '$venue')";
-			$result = mysqli_query($con,$sql);
+			if($tournament == '' ||  $start == '' || $end == '' || $venue == '') { echo "1"; }
+			if($start <= date("Y-m-d") || $end <= date("Y-m-d") || $end < $start) { echo "2"; }
+			else {
+				$sql = "INSERT INTO tournament(name, start_date, end_date, venue) VALUES ('$tournament', '$start', '$end', '$venue')";
+				$result = mysqli_query($con,$sql);
+			}
 		}
 	}
 
