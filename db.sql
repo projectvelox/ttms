@@ -171,8 +171,10 @@ CREATE TABLE IF NOT EXISTS `player` (
   `belt` varchar(150) DEFAULT NULL,
   `school_degree` varchar(50) DEFAULT NULL,
   `category` varchar(150) DEFAULT NULL,
+  `group_cat` varchar(100) DEFAULT NULL
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=latin1;
+
 
 -- Dumping data for table ttms.player: ~32 rows (approximately)
 DELETE FROM `player`;
