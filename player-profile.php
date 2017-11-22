@@ -5,6 +5,22 @@
 	if(!isset($_SESSION['login_user'])){
 	  header("location:index.php");
 	}
+
+
+	if(isset($_POST['action'])){
+		if(@$_GET['id'] != ''){
+		 if($_POST['action'] == 'saveGroup' && @$_POST['group'] != ''){
+		 	$query = mysqli_query($con, 'UPDATE player SET group_cat = "'.addslashes($_POST['group']).'" WHERE id = '.addslashes($_GET['id']));
+		 }
+		 if($_POST['action'] == 'saveCategory' && @$_POST['cat'] != ''){
+		 	$query = mysqli_query($con, 'UPDATE player SET category = "'.addslashes($_POST['cat']).'" WHERE id = '.addslashes($_GET['id']));
+		 }
+		}
+		exit;
+	}
+
+
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -40,7 +56,8 @@
 				$achievement = $row['achievement'];
 				$belt = $row['belt'];
 				$degree = $row['school_degree'];
-				$category = $row['category'];		
+				$category = $row['category'];
+				$group = $row['group_cat'];		
 			}
 	?>
 
@@ -243,12 +260,93 @@
 						      </div>
 						  </div>
 
+						  <?php 
+						  if($degree == 'Elementary'){
+						  	$group_select = [];
+
+						  	if($height >= 120 && $height <= 128)
+						  		$group_select[] = 'Group 1';
+						  	if($height >= 128 && $height <= 136)
+						  		$group_select[] = 'Group 2';
+						  	if($height >= 136 && $height <= 144)
+						  		$group_select[] = 'Group 3';
+						  	if($height >= 144 && $height <= 152)
+						  		$group_select[] = 'Group 4';
+						  	if($height >= 152 && $height <= 160)
+						  		$group_select[] = 'Group 5';
+						  	if($height >= 160 && $height <= 168)
+						  		$group_select[] = 'Group 6'; 
+						  ?>
+						  <div class="form-group">
+							  <label class="control-label col-sm-4" for="category"> Group: </label>
+							  <div class="col-sm-8"> 
+						      	<select name="group" class="form-control" id="groupOption">
+						      	  <?php 
+						      	  if(!empty($group_select)){
+						      	  	foreach($group_select as $group_option){
+						      	  		echo '<option value="'.$group_option.'"'.($group == $group_option ? ' selected' : '').'>'.$group_option.'</option>';
+						      	  	}
+						      	  }
+						      	  ?>
+						      	</select>
+						      </div>
+						  </div>
+						  <?php }else{
+						  		$category_select = [];
+
+						  		if($sex == 'Male'){
+						  			if($weight <= 54)
+						  				$category_select[] = 'Fin Weight';
+						  			if($weight >= 54 && $weight <= 58)
+						  				$category_select[] = 'Fly Weight';
+						  			if($weight >= 58 && $weight <= 63)
+						  				$category_select[] = 'Bantam Weight';
+						  			if($weight >= 63 && $weight <= 68)
+						  				$category_select[] = 'Feather Weight';
+						  			if($weight >= 68 && $weight <= 74)
+						  				$category_select[] = 'Light Weight';
+						  			if($weight >= 74 && $weight <= 80)
+						  				$category_select[] = 'Welter Weight';
+						  			if($weight >= 80 && $weight <= 87)
+						  				$category_select[] = 'Middle Weight';
+						  			if($weight >= 87)
+						  				$category_select[] = 'Heavy Weight';
+						  		}else{
+						  			if($weight <= 46)
+						  				$category_select[] = 'Fin Weight';
+						  			if($weight >= 46 && $weight <= 49)
+						  				$category_select[] = 'Fly Weight';
+						  			if($weight >= 49 && $weight <= 53)
+						  				$category_select[] = 'Bantam Weight';
+						  			if($weight >= 53 && $weight <= 57)
+						  				$category_select[] = 'Feather Weight';
+						  			if($weight >= 57 && $weight <= 62)
+						  				$category_select[] = 'Light Weight';
+						  			if($weight >= 62 && $weight <= 67)
+						  				$category_select[] = 'Welter Weight';
+						  			if($weight >= 67 && $weight <= 73)
+						  				$category_select[] = 'Middle Weight';
+						  			if($weight >= 73)
+						  				$category_select[] = 'Heavy Weight';
+						  		}
+						  	?>
 						  <div class="form-group">
 							  <label class="control-label col-sm-4" for="category"> Category: </label>
 							  <div class="col-sm-8"> 
-						      	<input type="text" class="form-control" id="category" disabled value="<?php echo "$category"?>">
+						      	<select name="category" class="form-control" id="catOption">
+						      	  <?php 
+						      	  if(!empty($category_select)){
+						      	  	foreach($category_select as $cat_option){
+						      	  		echo '<option value="'.$cat_option.'"'.($category == $cat_option ? ' selected' : '').'>'.$cat_option.'</option>';
+						      	  	}
+						      	  }
+						      	  ?>
+						      	</select>
 						      </div>
 						  </div>
+						  <?php 
+							}
+						  ?>
 						</div>
 					</div>
 				
@@ -301,6 +399,19 @@
 	<script src="js/bootstrap.min.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function(){
+			$("#groupOption").change(function(){
+				var t = $(this);
+				$.post('player-profile.php?id='+<?= addslashes($_GET['id']) ?>, { action : 'saveGroup', group : t.val()}, function(res){
+				});
+			});
+
+			$("#catOption").change(function(){
+				var t = $(this);
+				$.post('player-profile.php?id='+<?= addslashes($_GET['id']) ?>, { action : 'saveCategory', cat : t.val()}, function(res){
+				});
+			});
+
+
 			$(".more").hide(); 
 			$(".less").hide();
 			$(".elementary").hide();

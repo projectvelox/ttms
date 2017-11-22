@@ -109,7 +109,7 @@ if(mysqli_num_rows($query) > 0){
 							</select>
 						</div>
 					</div>
-					<div class="form-group has-feedback">
+					<div class="form-group has-feedback" id="catOptions">
 						<label class="col-sm-2 control-label">Category</label>
 						<div class="col-sm-10">
 							<select name="category" id="category" required class="form-control">
@@ -230,11 +230,12 @@ if(isset($_POST['tid'])){
 
 
 // Check if team size is even
-if(count($team_match_array_db)%2 > 0)
-	$team_match_array_db[] = array(null, null);
+if(count($team_match_array_db)%2 > 0){
+	if(count($team_match_array_db) >= 3)
+		$team_match_array_db[] = array(null, null);
+}
 
-// Check if last array has partner
-
+// Check if last array has partner team if not automatically create one
 $last_team_slot = $team_match_array_db[count($team_match_array_db)-1];
 if(!isset($last_team_slot[1]))
 	$team_match_array_db[count($team_match_array_db)-1][1] = null;
@@ -285,11 +286,15 @@ $(document).ready(function(){
 
 	$("#school_level").change(function(){
 		var t = $(this);
-		if(t.val() == 'Elementary')
-			$("#elemetaryOptions").show();
-		else
-			$("#elemetaryOptions").hide();
-	});
+		if(t.val() == 'Elementary'){
+			$("#elemetaryOptions").css('display','block');
+			$("#catOptions").css('display','none');
+		}
+		else{
+			$("#elemetaryOptions").css('display','none');
+			$("#catOptions").css('display','block');
+		}
+	}).change();
 
 	var singleElimination = {
 		"teams": <?= json_encode($team_match_array_db) ?>,
@@ -355,6 +360,7 @@ $(document).ready(function(){
 		}, 'json');
 	  }
 	}
+
 
 	 window.mcBracket = $('#match-canvas').bracket({
 	 	  //disableToolbar : true,
