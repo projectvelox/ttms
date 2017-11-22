@@ -67,6 +67,28 @@ if(mysqli_num_rows($query) > 0){
 							</select>
 						</div>
 					</div>
+					<div class="form-group" id="elemetaryOptions"<?= ($_POST['school_level']!='Elementary' ? ' style="display:none;"' : '')?>>
+						<label class="col-sm-2 control-label">Group:</label>
+						<div class="col-sm-10">
+							<?php 
+							$groups = array(
+								'Group 1',
+								'Group 2',
+								'Group 3', 
+								'Group 4',
+								'Group 5',
+								'Group 6'
+							);
+							?>
+							<select name="group" id="group" required class="form-control">
+							<?php 
+								foreach($groups as $i => $groupName){
+									echo '<option value="'.$i.'"'.($i == $_POST['group'] ? ' selected' : '').'>'.$groupName.'</option>';
+								}
+							?>	
+							</select>
+						</div>
+					</div>
 					<div class="form-group has-feedback">
 						<label class="col-sm-2 control-label">Gender</label>
 						<div class="col-sm-10">
@@ -134,21 +156,49 @@ if(isset($_POST['tid'])){
 		if(mysqli_num_rows($q) > 0){
 			$tournament = mysqli_fetch_object($q);
 
-			$a_o=$_POST['a_o'];
-			$school_level=$_POST['school_level'];
-			$sex = $_POST['sex'];
-			$category = $_POST['category'];
+
+
+			$a_o = mysqli_real_escape_string($con, $_POST['a_o']);
+			$school_level = mysqli_real_escape_string($con,$_POST['school_level']);
+			$sex = mysqli_real_escape_string($con,$_POST['sex']);
+			$category = mysqli_real_escape_string($con,$_POST['category']);
+			$group = mysqli_real_escape_string($con, $_POST['group']);
+
+			$custom_sql = '';
+
+
+			if($school_level == 'Elementary' && $group >= 0){
+				$height_args = '';
+
+				if($group == 0){
+					$height_args = '`height` >= 120 AND `height` <= 128';
+				}elseif($group == 1){
+					$height_args = '`height` > 128 AND `height` <= 136';
+				}elseif($group == 2){
+					$height_args = '`height` > 136 AND `height` <= 144';
+				}elseif($group == 3){
+					$height_args = '`height` > 144 AND `height` <= 152';
+				}elseif($group == 4){
+					$height_args = '`height` > 152 AND `height` <= 160';
+				}elseif($group == 5){
+					$height_args = '`height` > 160 AND `height` <= 168';
+				}
+
+				$custom_sql .= ' AND ('. $height_args .')';
+			}
+
 
 			$qstr = "SELECT * FROM matchmaking WHERE 
-			tournament = '". $tournament->name ."' AND advanceornovice = '$a_o' AND school_degree = '$school_level' AND sex = '$sex' AND category = '$category' ORDER BY statistic_score DESC";
+			tournament = '". $tournament->name ."' AND advanceornovice = '$a_o' AND school_degree = '$school_level' AND sex = '$sex' AND category = '$category'".$custom_sql." ORDER BY statistic_score DESC";
 			$query = mysqli_query($con, $qstr);
 			//echo mysqli_num_rows($query);
 			if(mysqli_num_rows($query)==0){
 				echo "<h4 class='text-center'>No Results</h4>";
 			}
 			else {
+
 				while($row = mysqli_fetch_assoc($query)){
-					$teamName = $row['name'].' <strong>'.$row['statistic_score'].'%</strong>';
+					$teamName = $row['name'].' '.$row['statistic_score'].'%';
 					$teams_array[] = $teamName;
 
 					if(empty($team_match_array_db)){
@@ -200,8 +250,19 @@ if(isset($_POST['tid'])){?>
 
 
 <button type="button" class="btn btn-danger" id="btnResetMatch"<?= (isset($has_result_data) ? ' style="display:block;"' : 'style="display:none;"') ?>><span class="glyphicon glyphicon-refresh"></span> Reset Match</button>
+
+<button type="button" class="btn btn-success" id="btnSave">Save</button>
+<button type="button" class="btn btn-warning" id="btnPrint">Print</button>
+
 	<script type="text/javascript">
 	$(function(){
+		$("#btnPrint").on('click', function(){
+			window.print();
+		});
+		$("#btnSave").on('click', function(){
+			//$('.score.editable').eq(0).click(); $('.score input').eq(0).trigger('blur');
+			alert('Saved successfully!');
+		});
 		$("#btnResetMatch").on('click', function(){
 			var conf = confirm('Are you sure you want to reset this match?');
 			if(conf){
@@ -221,6 +282,14 @@ if(isset($_POST['tid'])){?>
 
 <script type="text/javascript">
 $(document).ready(function(){
+
+	$("#school_level").change(function(){
+		var t = $(this);
+		if(t.val() == 'Elementary')
+			$("#elemetaryOptions").show();
+		else
+			$("#elemetaryOptions").hide();
+	});
 
 	var singleElimination = {
 		"teams": <?= json_encode($team_match_array_db) ?>,
@@ -287,10 +356,10 @@ $(document).ready(function(){
 	  }
 	}
 
-	 $('#match-canvas').bracket({
+	 window.mcBracket = $('#match-canvas').bracket({
 	 	  //disableToolbar : true,
 		  disableTeamEdit : false,
-	 	  skipConsolationRound: true,
+	 	  skipConsolationRound: false,
 	      init: singleElimination,
 	      teamWidth : 280,
 	      scoreWith : 100,
