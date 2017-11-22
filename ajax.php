@@ -127,6 +127,8 @@
 		$tournament = $_POST['tournament'];
 		$coach = $_POST['coach'];
 		$sql = mysqli_query($con,"UPDATE tournament_registration SET status='Paid' WHERE coach='$coach' AND tournament='$tournament'");
+		// Set price to 0
+		$sql = mysqli_query($con,"UPDATE tournament_registration SET price=0 WHERE coach='$coach' AND tournament='$tournament'");
 	}
 
 	if($_POST["action"]=="tournament-rules") {
