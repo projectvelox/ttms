@@ -20,6 +20,42 @@
 	}
 
 
+	$id = $_GET['id'];
+
+	if(isset($_POST['save_basic'])){
+		$query = mysqli_query($con, '
+			UPDATE `player` SET 
+				age = '.$_POST['age'].',
+				sex = "'.$_POST['sex'].'",
+				dateofbirth = "'.$_POST['dob'].'",
+				weight = "'.$_POST['weight'].'",
+				height = "'.$_POST['height'].'"
+			WHERE id = '.$id.'
+		');
+
+		$success = 1;
+	}
+
+	if(isset($_POST['save_info'])){
+		$query = mysqli_query($con, '
+			UPDATE `player` SET 
+				firsttimer = "'.$_POST['firsttimer'].'",
+				noviceoradvance = "'.$_POST['noviceoradvance'].'",
+				skillrating = "'.$_POST['skillrating'].'",
+				stamina = "'.$_POST['stamina'].'",
+				speed = "'.$_POST['speed'].'",
+				power = "'.$_POST['power'].'",
+				achievement = "'.$_POST['achievement'].'", 
+				belt = "'.$_POST['belt'].'",
+				school_degree = "'.$_POST['degree'].'", 
+				category = "'.@$_POST['category'].'",
+				group_cat = "'.@$_POST['group'].'"
+			WHERE id = '.$id.'
+		');
+
+		$success = 1;
+	}
+
 
 ?>
 <!DOCTYPE html>
@@ -114,6 +150,13 @@
 				</h1>
 			</div>
 			<div class="content-container">
+
+				<?php 
+				if(isset($success)){
+					echo '<div class="alert alert-success">Information was saved successfully!</div>';
+				}
+				?>
+
 					<div class="col-md-6 col-xs-12">
 						<div class="bordify" style="height: 200px; text-align: center; margin-bottom: 80px">
 
@@ -128,137 +171,246 @@
 							</div>
 						</div><hr>
 						<div class="form-horizontal">
+							<form method="post">
 							<h4>Basic Information:</h4>
-							<div class="form-group">
-							    <label class="control-label col-sm-2" for="age">Age:</label>
-							    <div class="col-sm-10"> 
-							      <input type="text" class="form-control" id="age" disabled value="<?php echo "$age" ?>">
-							    </div>
-							</div>
 
-							<div class="form-group">
-								  <label class="control-label col-sm-2" for="sex">Sex:</label>
-								  <div class="col-sm-10"> 
-							      	<input type="text" class="form-control" disabled value="<?php echo "$sex" ?>">
-							   	  </div>
-							</div>
+							 <div class="form-group">
+						    <label class="control-label col-sm-2" for="age">Age:</label>
+						    <div class="col-sm-10"> 
+						      <input type="number" class="form-control" id="age" name="age" value="<?php echo "$age" ?>">
+						    </div>
+						  </div>
 
-							<div class="form-group">
-							    <label class="control-label col-sm-2" for="dateofbirth">Birthdate:</label>
-							    <div class="col-sm-10"> 
-							      <input type="date" class="form-control" id="dateofbirth" disabled value="<?php echo "$dob"?>">
-							    </div>
-							</div>
+						  <div class="form-group">
+							  <label class="control-label col-sm-2" for="sex">Sex:</label>
+							  <div class="col-sm-10"> 
+						      
+						      	<select class="form-control" name="sex" id="sex">
+								    <option>Select an option below</option>
+								    <option value="Male"<?= ($sex== 'Male'?' selected' : '') ?>>Male</option>
+								    <option value="Female"<?= ($sex== 'Female'?' selected' : '') ?>>Female</option>						  
+								  </select>
 
-	    					<div class="form-group">
-							    <label class="control-label col-sm-2" for="coach">Coach:</label>
-							    <div class="col-sm-10"> 
-							      <input type="text" class="form-control" id="coach" disabled value="<?php echo "$coach"?>">
-							    </div>
-							</div>
+						   	  </div>
+						  </div>
 
-							<div class="form-group">
-							    <label class="control-label col-sm-2" for="gym">Gym:</label>
-							    <div class="col-sm-10"> 
-							      <input type="text" class="form-control" id="gym" disabled value="<?php echo "$gym"?>">
-							    </div>
-							</div>
+						  <div class="form-group">
+						    <label class="control-label col-sm-2" for="dateofbirth">Birthdate:</label>
+						    <div class="col-sm-10"> 
+						      <input type="date" class="form-control" id="dateofbirth" name="dob" value="<?php echo "$dob"?>">
+						    </div>
+						  </div>
 
-							<div class="form-group">
-							    <label class="control-label col-sm-2" for="weight">Weight:</label>
-							    <div class="col-sm-10"> 
-							      <input type="number" class="form-control" id="weight" disabled value="<?php echo "$weight"?>">
-							    </div>
-							</div>
+						  <div class="form-group">
+						    <label class="control-label col-sm-2" for="coach">Coach:</label>
+						    <div class="col-sm-10"> 
+						      <input type="text" class="form-control" disabled id="coach" name="coach" value="<?php echo "$coach"?>">
+						    </div>
+						  </div>
 
-							<div class="form-group">
-							    <label class="control-label col-sm-2" for="height">Height:</label>
-							    <div class="col-sm-10"> 
-							      <input type="number" class="form-control" id="height" disabled value="<?php echo "$height"?>">
-							    </div>
-							</div>
+						  <div class="form-group">
+						    <label class="control-label col-sm-2" for="gym">Gym:</label>
+						    <div class="col-sm-10"> 
+						      <input type="text" class="form-control" id="gym" name="gym"  value="<?php echo "$gym"?>" disabled>
+						    </div>
+						  </div>
+
+						   <div class="form-group">
+						    <label class="control-label col-sm-2" for="weight">Weight:</label>
+						    <div class="col-sm-10"> 
+						      <input type="number" class="form-control" id="weight" name="weight"  value="<?php echo "$weight"?>">
+						    </div>
+						  </div>
+
+						  <div class="form-group">
+						    <label class="control-label col-sm-2" for="height">Height:</label>
+						    <div class="col-sm-10"> 
+						      <input type="number" class="form-control" id="height" name="height"  value="<?php echo "$height"?>">
+						    </div>
+						  </div>
+
+						  <div class="row">
+								<div class="col-md-12 col-xs-12 text-center">
+									<div class="form-group">
+								  	<button class="btn btn-success" type="submit" name="save_basic">EDIT</button>
+								  </div>
+								</div>
+						  </div>
+
+							</form>
 						</div>
 					</div>
 
 					<div class="col-md-6 col-xs-12">
 						<div class="form-horizontal">
+							<form method="post">
 						<h4 class="text-right">Taekwondo Information:</h4>
-						  <div class="form-group">
+						    <div class="form-group">
 						    <label class="control-label col-sm-4" for="firsttimer">First Timer:</label>
 						    <div class="col-sm-8"> 
-						      <input type="text" class="form-control" id="firsttimer" disabled value="<?php echo "$firsttimer"?>">
+						      
+
+						      <select class="form-control" name="firsttimer" id="firsttimer">
+								    <option selected>Select an option below</option>
+								    <option value="Yes"<?= ($firsttimer == 'Yes' ? ' selected' : '') ?>>Yes</option>
+								    <option value="No"<?= ($firsttimer == 'No' ? ' selected' : '') ?>>No</option>						  
+								  </select>
+
 						    </div>
 						  </div>
 						  
-						  <div class="form-group more notless" >
+						  <div class="form-group more notless">
 							  <label class="control-label col-sm-4" for="joinedmorethan"> Joined more than 5 tournaments:</label>
 							  <div class="col-sm-8"> 
-						     	 <input type="text" class="form-control" id="joinedmorethan" disabled value="<?php echo "$joinedmorethan"?>">
+						     	 <select class="form-control" name="joinedmorethan" id="joinedmorethan">
+								    <option>Select an option below</option>
+								    <option value="Yes"<?= ($joinedmorethan == 'Yes' ? ' selected' : '')?>>Yes</option>
+								    <option value="No"<?= ($joinedmorethan == 'No' ? ' selected' : '')?>>No</option>						  
+								  </select>
+
 						      </div>
 						  </div>
 
 						  <div class="form-group more less">
 							  <label class="control-label col-sm-4" for="joinedlessthan">Joined less than 5 tournaments:</label>
 							  <div class="col-sm-8"> 
-						      	<input type="text" class="form-control" id="joinedlessthan" disabled value="<?php echo "$joinedlessthan"?>">
+						     
+						      	<select class="form-control" id="joinedlessthan">
+								    <option>Select an option below</option>
+								    <option value="Yes"<?= ($joinedlessthan == 'Yes' ? ' selected' : '') ?>>Yes</option>
+								    <option value="No"<?= ($joinedlessthan == 'No' ? ' selected' : '') ?>>No</option>						  
+								  </select>
 						      </div>
 						  </div>
 
 						  <div class="form-group">
 							  <label class="control-label col-sm-4" for="noviceoradvance"> Novice or Advance: </label>
 							  <div class="col-sm-8"> 
-						      	<input type="text" class="form-control" id="noviceoradvance" disabled value="<?php echo "$novice"?>">
+						      	
+						      	  <select class="form-control" name="noviceoradvance" id="noviceoradvance">
+								    <option>Select an option below</option>
+								    <option value="Novice"<?= ($novice == 'Novice'? ' selected' : '')?>>Novice</option>
+								    <option value="Advance"<?= ($novice == 'Advance'? ' selected' : '')?>>Advance</option>						  
+								  </select>
+
 						      </div>
 						  </div>
 
 						  <div class="form-group">
 							  <label class="control-label col-sm-4" for="skillrating"> Skill Rating (1-10): </label>
 							  <div class="col-sm-8"> 
-						      	<input type="text" class="form-control" id="skillrating" disabled value="<?php echo "$skillrating"?>">
+						      	
+
+						      	<select class="form-control" name="skillrating" id="skillrating">
+								    <option>Select an option below (1 highest & 10 lowest)</option>
+								    <?php 
+								    for($e=1;$e<=10;$e++){?>
+								    <option value="<?= $e ?>"<?= ($e==$skillrating?' selected': '')?>><?= $e ?></option>
+								    <?php }
+								    ?>  
+								  </select>
+
 						      </div>
 						  </div>
 
 						  <div class="form-group">
 							  <label class="control-label col-sm-4" for="stamina"> Stamina (1-10): </label>
 							  <div class="col-sm-8"> 
-						      	<input type="text" class="form-control" id="stamina" disabled value="<?php echo "$stamina"?>">
+						      	
+						      	<select class="form-control" name="stamina" id="stamina">
+								    <option>Select an option below (1 highest & 10 lowest)</option>
+								    <?php 
+								    for($e=1;$e<=10;$e++){?>
+								    <option value="<?= $e ?>"<?= ($e==$stamina?' selected': '')?>><?= $e ?></option>
+								    <?php }
+								    ?>  
+								  </select>
+
 						      </div>
 						  </div>
 
 						 <div class="form-group">
 							  <label class="control-label col-sm-4" for="speed"> Speed (1-10): </label>
 							  <div class="col-sm-8"> 
-						      	<input type="text" class="form-control" id="speed" disabled value="<?php echo "$speed"?>">
+						      
+						      	<select class="form-control" name="speed" id="speed">
+								    <option>Select an option below (1 highest & 10 lowest)</option>
+								    <?php 
+								    for($e=1;$e<=10;$e++){?>
+								    <option value="<?= $e ?>"<?= ($e==$speed?' selected': '')?>><?= $e ?></option>
+								    <?php }
+								    ?>  
+								  </select>
+
 						      </div>
 						  </div>
 
 						  <div class="form-group">
 							  <label class="control-label col-sm-4" for="power"> Power (1-10): </label>
 							  <div class="col-sm-8"> 
-						      	<input type="text" class="form-control" id="power" disabled value="<?php echo "$power"?>">
+						      
+						      	<select class="form-control" name="power" id="power">
+								    <option>Select an option below (1 highest & 10 lowest)</option>
+								    <?php 
+								    for($e=1;$e<=10;$e++){?>
+								    <option value="<?= $e ?>"<?= ($e==$power?' selected': '')?>><?= $e ?></option>
+								    <?php }
+								    ?>  
+								  </select>
+
 						      </div>
 						  </div>
 
 						  <div class="form-group">
 							  <label class="control-label col-sm-4" for="achievement"> Highest Achievement: </label>
 							  <div class="col-sm-8"> 
-						      	<input type="text" class="form-control" id="achievement" disabled value="<?php echo "$achievement"?>">
+						      	
+						      	<select class="form-control" name="achievement" id="achievement">
+								    <option>Select an option below</option>
+								    <option value="None"<?= ($achievement=='None'?' selected':'') ?>>None</option>
+								    <option value="Local"<?= ($achievement=='Local'?' selected':'') ?>>Local</option>
+								    <option value="Regional"<?= ($achievement=='Regional'?' selected':'') ?>>Regional</option>
+								    <option value="National"<?= ($achievement=='National'?' selected':'') ?>>National</option>
+								    <option value="International"<?= ($achievement=='International'?' selected':'') ?>>International</option>							  
+								  </select>
+
 						      </div>
 						  </div>
 
 						  <div class="form-group">
 							  <label class="control-label col-sm-4" for="belt">Belt:</label>
 							  <div class="col-sm-8"> 
-						      	<input type="text" class="form-control" id="belt" disabled value="<?php echo "$belt"?>">
+						      
+						      	<select class="form-control" name="belt" id="belt">
+								    <option data-belt='None'>Choose a belt below</option>
+								    <?php
+										$con = mysqli_connect("localhost","ttms","ttms","ttms");	
+										$result = mysqli_query($con,"SELECT * FROM belts");
+											while($row = mysqli_fetch_array($result))
+											{
+												echo "<option data-belt='" . $row['belt'] . "'".($belt==$row['belt']?' selected':'').">" . $row['belt'] .  "</option>";
+											}
+											mysqli_close($con);
+									?>					  
+								  </select>
+
 						      </div>
 						  </div>
 
 						  <div class="form-group">
 							  <label class="control-label col-sm-4" for="degree"> School Degree: </label>
 							  <div class="col-sm-8"> 
-						      	<input type="text" class="form-control" id="degree" disabled value="<?php echo "$degree"?>">
+						      
+						      	<select class="form-control" id="degree" name="degree">
+								    <option>Select an option below</option>
+								    <option value="Elementary"<?= ($degree=='Elementary'?' selected':'') ?>>Elementary</option>
+								    <option value="Highschool"<?= ($degree=='Highschool'?' selected':'') ?>>Highschool</option>
+								    <option value="College"<?= ($degree=='College'?' selected':'') ?>>College</option>		  
+								  </select>
+
 						      </div>
 						  </div>
+
 
 						  <?php 
 						  if($degree == 'Elementary'){
@@ -347,6 +499,36 @@
 						  <?php 
 							}
 						  ?>
+
+						  <!--
+						  <div class="form-group">
+							  <label class="control-label col-sm-4" for="category"> Category: </label>
+							  <div class="col-sm-8"> 
+						      	<input type="text" class="form-control" id="category"  value="<?php echo "$category"?>">
+
+						      	<select class="form-control" id="elementary">
+								    <option selected disabled>Select an option below</option>
+								    <option value="Group 1">Group 1</option>
+								    <option value="Group 2">Group 2</option>
+								    <option value="Group 3">Group 3</option>
+								    <option value="Group 4">Group 4</option>
+								    <option value="Group 5">Group 5</option>
+								    <option value="Group 6">Group 6</option>		  
+								  </select>
+
+						      </div>
+						  </div>
+						-->
+
+						  <div class="row">
+								<div class="col-md-12 col-xs-12 text-center">
+									<div class="form-group">
+								  	<button class="btn btn-success" type="submit" name="save_info">EDIT</button>
+								  </div>
+								</div>
+							</div>
+							</form>
+
 						</div>
 					</div>
 				
