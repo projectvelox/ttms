@@ -47,6 +47,8 @@
 			?>
 		</table>
 	</div>
-	<script type="text/javascript"> function startPrint() { window.print(); } </script>
+	<script type="text/javascript"> 
+		function startPrint() { window.print(); } 
+	</script>
 </body>
 </html>
