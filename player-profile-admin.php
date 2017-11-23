@@ -143,7 +143,7 @@
 					<form method="post" class="form-horizontal">
 					<div class="col-md-6 col-xs-12">
 					<img src='images/players/<?=$name?>.jpg' onerror="src='images/players/none.jpg'" style='height: 100%;'></br></br>
-							<h4>Basic Information:</h4>
+					<h4>Basic Information:</h4>
 						  <div class="form-group">
 						    <label class="control-label col-sm-2" for="age">Age:</label>
 						    <div class="col-sm-10"> 
