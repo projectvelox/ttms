@@ -1,11 +1,7 @@
 <?php 
 	include('session.php');
 	include('config.php');
-
-	if(!isset($_SESSION['login_user'])){
-	  header("location:index.php");
-	}
-
+	if(!isset($_SESSION['login_user'])){ header("location:index.php"); }
 	$con = mysqli_connect("localhost","ttms","ttms","ttms");
 ?>
 <!DOCTYPE html>
@@ -63,6 +59,7 @@
 				<ul class="nav nav-tabs">
 				  <li class="active"><a data-toggle="tab" href="#home">Year</a></li>
 				  <li><a data-toggle="tab" href="#menu1">Month</a></li>
+				  <li><a data-toggle="tab" href="#menu3">Tournaments</a></li>
 				  <li><a data-toggle="tab" href="#menu2">Others</a></li>
 				</ul>
 
@@ -71,19 +68,19 @@
 				   	<h3 class="text-center">List of Tournaments</h3><br>
 				   	<?php
 						$result = mysqli_query($con,"SELECT YEAR(end_date) AS variable FROM tournament GROUP BY YEAR(end_date) ORDER BY YEAR(end_date) ASC");
-							while($row = mysqli_fetch_array($result))
-							{
-								echo '
-								<div class="col-md-3 col-xs-12">
-									<a href="reports-year.php?year='.$row['variable'].'" style="text-decoration:none; color: #000;" target="_blank">
-									<div class="bordify">
-										<h5 class="text-center"><span class="glyphicon glyphicon-list-alt"></span></h5>
-										<h4 class="text-center">'.$row['variable'].'</h4>
-									</div>
-									</a>
+						while($row = mysqli_fetch_array($result))
+						{
+							echo '
+							<div class="col-md-3 col-xs-12">
+								<a href="reports-year.php?year='.$row['variable'].'" style="text-decoration:none; color: #000;" target="_blank">
+								<div class="bordify">
+									<h5 class="text-center"><span class="glyphicon glyphicon-list-alt"></span></h5>
+									<h4 class="text-center">'.$row['variable'].'</h4>
 								</div>
-								';
-							}
+								</a>
+							</div>
+							';
+						}
 					?>
 				    
 				  </div>
@@ -91,20 +88,49 @@
 				  	<h3 class="text-center">List of Tournaments</h3><br>
 				   	<?php
 						$result = mysqli_query($con,"SELECT CONCAT(MONTHNAME(end_date), ' ', YEAR(end_date)) AS variable FROM tournament GROUP BY CONCAT(MONTHNAME(end_date), ' ', YEAR(end_date)) ORDER BY YEAR(end_date), MONTHNAME(end_date) DESC");
-							while($row = mysqli_fetch_array($result))
-							{
-								echo '
-								<div class="col-md-3 col-xs-12">
-									<a href="reports-month.php?month='.$row['variable'].'" style="text-decoration:none; color: #000;" target="_blank">
-									<div class="bordify">
-										<h5 class="text-center"><span class="glyphicon glyphicon-list-alt"></span></h5>
-										<h4 class="text-center">'.$row['variable'].'</h4>
-									</div>
-									</a>
+						while($row = mysqli_fetch_array($result))
+						{
+							echo '
+							<div class="col-md-3 col-xs-12">
+								<a href="reports-month.php?month='.$row['variable'].'" style="text-decoration:none; color: #000;" target="_blank">
+								<div class="bordify">
+									<h5 class="text-center"><span class="glyphicon glyphicon-list-alt"></span></h5>
+									<h4 class="text-center">'.$row['variable'].'</h4>
 								</div>
-								';
-							}
+								</a>
+							</div>
+							';
+						}
 					?>
+				  </div>
+				  <div id="menu3" class="tab-pane fade">
+				  	<h3 class="text-center">List of Tournaments</h3><br>
+				  	<div class="table-responsive">
+				  		<table class="table table-striped"> 
+				  			<tr>
+				  				<th>#</th>
+				  				<th>Name</th>
+				  				<th>Venue</th>
+				  				<th>Date</th>
+				  				<th>Action</th>
+				  			</tr>	
+						   	<?php
+								$result = mysqli_query($con,"SELECT * FROM tournament ORDER BY end_date DESC");
+								$i=0;
+								while($row = mysqli_fetch_array($result))
+								{
+									$i++;
+									echo '<tr>';
+									echo '<td>'.$i.'</td>';
+									echo '<td>'.$row['name'].'</td>';
+									echo '<td>'.$row['venue'].'</td>';
+									echo '<td>'.date('F d, Y', strtotime($row['start_date'])).' - '.date('F d, Y', strtotime($row['end_date'])).'</td>';
+									echo '<td><a class="btn btn-xs btn-primary" href="report-players.php?name='.$row['name'].'"><span class="glyphicon glyphicon-share-alt"></span></a></td>';
+									echo '</tr>';
+								}
+							?>
+						</table>
+					</div>
 				  </div>
 				  <div id="menu2" class="tab-pane fade">
 				  	<h3 class="text-center">Printable Lists</h3><br>
