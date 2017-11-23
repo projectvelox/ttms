@@ -86,6 +86,7 @@
 								<th>Venue</th>
 								<th>Rules</th>
 								<th>Payments</th>
+								<th>Match</th>
 							</tr>
 							<?php
 								$i=0;
@@ -111,6 +112,7 @@
 										echo "<td>" . $row['venue'] . "</td>";
 										echo "<td><a href='tournamentrule.php?id=".$row['id']."' class='btn btn-xs btn-primary'>Manage</button></td>";
 										echo "<td><a href='manage_payments.php?name=".urlencode($row['name'])."' class='btn btn-xs btn-primary'>Manage</button></td>";
+										echo "<td><a href='match_tournament.php?id=".$row['id']."' class='btn btn-xs btn-primary' target='_blank'>Match</a></td>";
 										echo "</tr>";
 									}
 									mysqli_close($con);
