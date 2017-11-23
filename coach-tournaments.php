@@ -60,6 +60,23 @@
 			<div class="col-xs-12 col-md-8 col-lg-8">
 				<div class="bordify">
 					<h2>Upcoming Tournaments</h2>
+
+					<div class="row">
+						<div class="col-md-12 col-xs-12">
+							<form method="post">
+								<div class="col-md-10 col-xs-12">
+									<input type="text" name="search" class="form-control" value="<?= @$_POST['search'] ?>">
+								</div>
+								<div class="col-md-2 col-xs-12">
+									<button class="btn btn-info" name="doSearch" type="submit">SEARCH</button>
+								</div>
+							</form>
+						</div>
+					</div>
+
+					<br/>
+
+
 					<div class="table-responsive">
 						<table class="table table-hover">
 							<tr>
@@ -72,7 +89,16 @@
 							<?php
 								$i=0;
 								$con = mysqli_connect("localhost","ttms","ttms","ttms");	
-								$result = mysqli_query($con,"SELECT * FROM tournament WHERE end_date >= NOW()");
+
+								$query = "SELECT * FROM tournament WHERE end_date >= NOW()";
+								
+								if(isset($_POST['doSearch'])){
+									$search = addslashes($_POST['search']);
+									if($search != '')
+										$query .= ' AND name LIKE "%'.$search.'%"';
+								}	
+
+								$result = mysqli_query($con,$query);
 									while($row = mysqli_fetch_array($result))
 									{
 										$i++;
