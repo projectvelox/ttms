@@ -83,7 +83,7 @@ if(mysqli_num_rows($query) > 0){
 							<select name="group" id="group" required class="form-control">
 							<?php 
 								foreach($groups as $i => $groupName){
-									echo '<option value="'.$i.'"'.($i == $_POST['group'] ? ' selected' : '').'>'.$groupName.'</option>';
+									echo '<option value="Group '.($i+1).'"'.('Group '.($i+1) == $_POST['group'] ? ' selected' : '').'>'.$groupName.'</option>';
 								}
 							?>	
 							</select>
@@ -167,9 +167,10 @@ if(isset($_POST['tid'])){
 			$custom_sql = '';
 
 
-			if($school_level == 'Elementary' && $group >= 0){
-				$height_args = '';
+			if($school_level == 'Elementary' && $group != ''){
+				//$height_args = '';
 
+				/*
 				if($group == 0){
 					$height_args = '`height` >= 120 AND `height` <= 128';
 				}elseif($group == 1){
@@ -183,13 +184,19 @@ if(isset($_POST['tid'])){
 				}elseif($group == 5){
 					$height_args = '`height` > 160 AND `height` <= 168';
 				}
+				*/
 
-				$custom_sql .= ' AND ('. $height_args .')';
+				//$custom_sql .= ' AND ('. $height_args .')';
+				$custom_sql .= ' AND (player.group_cat = "'.$group.'")';
 			}
 
 
-			$qstr = "SELECT * FROM matchmaking WHERE 
-			tournament = '". $tournament->name ."' AND advanceornovice = '$a_o' AND school_degree = '$school_level' AND sex = '$sex' AND category = '$category'".$custom_sql." ORDER BY statistic_score DESC";
+			$qstr = "SELECT matchmaking.* FROM matchmaking 
+			INNER JOIN player ON player.id = matchmaking.playerid
+			WHERE 
+			matchmaking.tournament = '". $tournament->name ."' AND matchmaking.advanceornovice = '$a_o' AND matchmaking.school_degree = '$school_level' AND matchmaking.sex = '$sex' AND matchmaking.category = '$category'".$custom_sql." ORDER BY matchmaking.statistic_score DESC";
+
+		
 			$query = mysqli_query($con, $qstr);
 			//echo mysqli_num_rows($query);
 			if(mysqli_num_rows($query)==0){
@@ -283,19 +290,6 @@ if(isset($_POST['tid'])){?>
 
 <script type="text/javascript">
 $(document).ready(function(){
-
-	$("#school_level").change(function(){
-		var t = $(this);
-		if(t.val() == 'Elementary'){
-			$("#elemetaryOptions").css('display','block');
-			$("#catOptions").css('display','none');
-		}
-		else{
-			$("#elemetaryOptions").css('display','none');
-			$("#catOptions").css('display','block');
-		}
-	}).change();
-
 	var singleElimination = {
 		"teams": <?= json_encode($team_match_array_db) ?>,
 		"results": <?= json_encode($score_per_round) ?>
@@ -380,6 +374,26 @@ $(document).ready(function(){
 });
 </script>
 <?php }?>
+
+
+<script>
+$(document).ready(function(){
+	$("#school_level").change(function(){
+		var t = $(this);
+		if(t.val() != null){
+		if(t.val() == 'Elementary'){
+			$("#elemetaryOptions").show();
+			$("#catOptions").hide();
+		}
+		else{
+			$("#elemetaryOptions").hide();
+			$("#catOptions").show();
+		}
+		}
+	}).change();
+
+});
+</script>
 
 
 </div>
